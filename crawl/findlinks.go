@@ -41,7 +41,7 @@ func init() {
 	skippath = cfg.Strings("skippath")
 }
 
-var rroot = regexp.MustCompile("^" + root)
+var rroot *regexp.Regexp
 var ranchor = regexp.MustCompile("[#?].*$")
 var skip = regexp.MustCompile(`^(https?://|(mailto|ftp|news):|/(vob/|cgi-bin/(cchist|man)))|\.ps$`)
 var slash = regexp.MustCompile("^/")
@@ -165,6 +165,7 @@ func exttok(n *html.Node, seen *map[string]bool, fn string) {
 
 // !+
 func main() {
+	rroot = regexp.MustCompile("^" + root)
 	worklist := make(chan []string)  // lists of URLs, may have duplicates
 	unseenLinks := make(chan string) // de-duplicated URLs
 	var n sync.WaitGroup
