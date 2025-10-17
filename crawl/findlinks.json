@@ -1,0 +1,9 @@
+{
+    "root": "/home/marc/public_html",
+    "skipword": [
+	"girod"
+    ],
+    "skippath": [
+	"/home/marc/public_html/cgi-bin/cchist"
+    ]
+}
