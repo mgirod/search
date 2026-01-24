@@ -1,12 +1,12 @@
-search/crawl/findlinks.go produces a key/value text file with words and paths relative to a local root.
-The local root, as well as words and paths to be skipped are configured in search/crawl/findlinks.json.
+search/crawl/findlinks.go produces a key/value text file with words and paths relative to a local root.  
+The local root, as well as words and paths to be skipped are configured in search/crawl/findlinks.json.  
 findlinks.json contains example values to be overwritten.
 
 The output text file is consumed by the cgi script installed from search/cgi/main.go.
 
 Setup in search/cgi/main.go:
 
-- two constants: `pfx` and `infile`
+- two constants: `pfx` and `infile`  
   `pfx` is the url mapped to the root defined in findlinks.json
 
 Installation (as an example, remotely built for a raspberry pi named `berry`):
