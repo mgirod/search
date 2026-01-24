@@ -140,6 +140,14 @@ func main() {
 		checked := map[bool]string{false: "", true: " CHECKED"}
 		fmt.Fprintf(w, `<input type="checkbox"%s name="r"`, checked[re])
 		fmt.Fprintf(w, "<br></form>\n")
+
+		fmt.Fprintf(w, "<br>The search applies to a list of words, at least 4 chars long, excluding whole numbers.\n")
+		fmt.Fprintf(w, "<br>Case is ignored.\n")
+		fmt.Fprintf(w, "<br>Patterns are space separated, and 'AND'ed.\n")
+		fmt.Fprintf(w, "<br>In the default mode, they must match exactly.\n")
+		fmt.Fprintf(w, "<br>In the regexp mode, patterns are not anchored, so they may match the middle of words.\n")
+		fmt.Fprintf(w, "<br>The '|' operator may be used to match alternatives, and '.' to match any single char.\n")
+
 		fmt.Fprintf(w, "</body>\n")
 		fmt.Fprintf(w, "</html>\n")
 	})); err != nil {
