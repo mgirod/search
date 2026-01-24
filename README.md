@@ -11,18 +11,18 @@ Setup in search/cgi/main.go:
 
 Installation (as an example, remotely built for a raspberry pi named `berry`):
 
-~> cd ~/git/search/cgi
-cgi> GOOS=linux GOARCH=arm64 GOARM=7 go build .
-cgi> scp cgi berry:/tmp/
+    ~> cd ~/git/search/cgi
+    cgi> GOOS=linux GOARCH=arm64 GOARM=7 go build .
+    cgi> scp cgi berry:/tmp/
 
 On berry:
-~> sudo mv /tmp/cgi /usr/lib/cgi-bin/search
+    ~> sudo mv /tmp/cgi /usr/lib/cgi-bin/search
 
 Instructions:
 
-~> cd ~/git/search/crawl/
-crawl> go run findlinks.go > /tmp/fl.out
-crawl> scp /tmp/fl.out berry:/tmp/
+    ~> cd ~/git/search/crawl/
+    crawl> go run findlinks.go > /tmp/fl.out
+    crawl> scp /tmp/fl.out berry:/tmp/
 
 Then on berry:
-~> sudo mv /tmp/fl.out /usr/lib/cgi-bin/
+    ~> sudo mv /tmp/fl.out /usr/lib/cgi-bin/
