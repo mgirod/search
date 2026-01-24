@@ -16,6 +16,7 @@ Installation (as an example, remotely built for a raspberry pi named `berry`):
     cgi> scp cgi berry:/tmp/
 
 On berry:
+
     ~> sudo mv /tmp/cgi /usr/lib/cgi-bin/search
 
 Instructions:
@@ -25,4 +26,5 @@ Instructions:
     crawl> scp /tmp/fl.out berry:/tmp/
 
 Then on berry:
+
     ~> sudo mv /tmp/fl.out /usr/lib/cgi-bin/
