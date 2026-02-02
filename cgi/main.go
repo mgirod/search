@@ -19,7 +19,9 @@ const (
 )
 
 var (
-	tRe = regexp.MustCompile(`(?is:<title>(.*?)</title>)`)
+	tRe   = regexp.MustCompile(`(?is:<title>(.*?)</title>)`)
+	numRe = regexp.MustCompile(`^\d+$`)
+	reFlg = regexp.MustCompile(`^r=`)
 )
 
 func title(w http.ResponseWriter, fn string) string {
@@ -49,6 +51,18 @@ func title(w http.ResponseWriter, fn string) string {
 	return t[1]
 }
 
+func prune(s string) bool {
+	if len(s) < 4 {
+		fmt.Printf("Ignore %s: too short<br>\n", s)
+		return false
+	}
+	if numRe.MatchString(s) {
+		fmt.Printf("Ignore %s: skipping whole numbers<br>\n", s)
+		return false
+	}
+	return true
+}
+
 func main() {
 	if err := cgi.Serve(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		header := w.Header()
@@ -70,14 +84,22 @@ func main() {
 		buf := make([]byte, 64)
 		defer r.Body.Close()
 		n, err := r.Body.Read(buf)
-		re := false
+		re, hlp := false, false
 		if err != nil && err.Error() != "EOF" {
 			fmt.Fprintf(w, "error: %v<br>\n", err)
 		} else {
 			s := string(buf[:n])
 			arg := strings.Split(s, "&")
 			s = arg[0]
-			re = len(arg) > 1
+			if len(arg) > 2 {
+				re, hlp = true, true
+			} else if len(arg) > 1 {
+				if reFlg.MatchString(arg[1]) {
+					re = true
+				} else {
+					hlp = true
+				}
+			}
 			s, _ = strings.CutPrefix(s, "w=")
 			s, err = url.QueryUnescape(s)
 			if err != nil && err.Error() != "EOF" {
@@ -86,7 +108,12 @@ func main() {
 			s = strings.ToLower(s)
 			s = strings.TrimSpace(s)
 			if s != "" {
-				items := strings.Split(s, " ")
+				items := []string{}
+				for _, i := range strings.Split(s, " ") {
+					if prune(i) {
+						items = append(items, i)
+					}
+				}
 				nit := len(items)
 				hit := make(map[string]int)
 				//successfully match re only once per file
@@ -136,18 +163,27 @@ func main() {
 		fmt.Fprintf(w, `<form method="post" action="/cgi-bin/search">`)
 		fmt.Fprintf(w, `<input type="text" name="w" value="">`)
 		fmt.Fprintf(w, `<input type="submit" value="Search">`)
-		fmt.Fprintf(w, "<br> regexp mode: ")
+		fmt.Fprintf(w, "<br>regexp mode: ")
 		checked := map[bool]string{false: "", true: " CHECKED"}
 		fmt.Fprintf(w, `<input type="checkbox"%s name="r"`, checked[re])
+		fmt.Fprintf(w, "<br><br>show help: ")
+		help := map[bool]string{false: "", true: " CHECKED"}
+		fmt.Fprintf(w, `<input type="checkbox"%s name="h"`, help[hlp])
 		fmt.Fprintf(w, "<br></form>\n")
-
-		fmt.Fprintf(w, "<br>The search applies to a list of words, at least 4 chars long, excluding whole numbers.\n")
-		fmt.Fprintf(w, "<br>Case is ignored.\n")
-		fmt.Fprintf(w, "<br>Patterns are space separated, and 'AND'ed.\n")
-		fmt.Fprintf(w, "<br>In the default mode, they must match exactly.\n")
-		fmt.Fprintf(w, "<br>In the regexp mode, patterns are not anchored, so they may match the middle of words.\n")
-		fmt.Fprintf(w, "<br>The '|' operator may be used to match alternatives, and '.' to match any single char.\n")
-
+		if hlp {
+			fmt.Fprintf(w, "<br>The search applies to a list of words, at least 4 chars long, excluding whole numbers (reported).\n")
+			fmt.Fprintf(w, "<br>Case is ignored.\n")
+			fmt.Fprintf(w, "<br>Patterns are space separated, and 'AND'ed.\n")
+			fmt.Fprintf(w, "<br>In the default mode, they must match exactly.\n")
+			fmt.Fprintf(w, "<br>Matches are per page, and indenpendent. Order doesn't matter.\n")
+			fmt.Fprintf(w, "<br>In the regexp mode, patterns are not anchored, so they may match the middle of words.\n")
+			fmt.Fprintf(w, "<br>The '|' operator may be used to match alternatives, and '.' to match any single char. '\b' means word boundary.\n")
+			fmt.Fprintf(w, "<br>Examples:\n")
+			fmt.Fprintf(w, "<br>'love|amour|любовь' matches any of the 3 words, but also 'amours', 'lover' or 'clove'.\n")
+			fmt.Fprintf(w, "<br>Use '\b(love|amour)\b' to restrict to the exact words (bug with parentheses and cyrillic...)\n")
+			fmt.Fprintf(w, "<br>'[eé]vidence' to accept both English and French spellings.\n")
+			fmt.Fprintf(w, "<br>'différ.nce\b' to accept Derrida's variant.\n")
+		}
 		fmt.Fprintf(w, "</body>\n")
 		fmt.Fprintf(w, "</html>\n")
 	})); err != nil {
