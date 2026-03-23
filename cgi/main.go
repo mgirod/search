@@ -177,7 +177,7 @@ func main() {
 			fmt.Fprintf(w, "<br>In the default mode, they must match exactly.\n")
 			fmt.Fprintf(w, "<br>Matches are per page, and indenpendent. Order doesn't matter.\n")
 			fmt.Fprintf(w, "<br>In the regexp mode, patterns are not anchored, so they may match the middle of words.\n")
-			fmt.Fprintf(w, "<br>The '|' operator may be used to match alternatives, and '.' to match any single char. '\b' means word boundary.\n")
+			fmt.Fprintf(w, "<br>The '|' operator may be used to match alternatives, and '.' to match any single char. '\\b' means word boundary.\n")
 			fmt.Fprintf(w, "<br>Examples:\n")
 			fmt.Fprintf(w, "<br>'love|amour|любовь' matches any of the 3 words, but also 'amours', 'lover' or 'clove'.\n")
 			fmt.Fprintf(w, "<br>Use '\b(love|amour)\b' to restrict to the exact words (bug with parentheses and cyrillic...)\n")
