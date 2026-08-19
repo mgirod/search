@@ -27,7 +27,7 @@ import (
 	"golang.org/x/net/html"
 )
 
-var root string
+var root, bootstrap string
 var skipword []string
 var skippath []string
 
@@ -37,6 +37,7 @@ func init() {
 		panic(err)
 	}
 	root = cfg.String("root")
+	bootstrap = cfg.String("bootstrap")
 	skipword = cfg.Strings("skipword")
 	skippath = cfg.Strings("skippath")
 }
@@ -46,6 +47,7 @@ var ranchor = regexp.MustCompile("[#?].*$")
 var skip = regexp.MustCompile(`^(https?://|(mailto|ftp|news):|/(vob/|cgi-bin/(cchist|man)))|\.ps$`)
 var slash = regexp.MustCompile("^/")
 var skipscan = regexp.MustCompile(`^(invalid digit '\d' in octal literal|(exponent|hexadecimal literal) has no digits)|must separate successive digits`)
+var skiptok = regexp.MustCompile("^_*$")
 
 // Extract makes an HTTP GET request to the specified URL, parses
 // the response as HTML, and returns the links in the HTML document.
@@ -154,7 +156,7 @@ func exttok(n *html.Node, seen *map[string]bool, fn string) {
 		}
 		for tok := s.Scan(); tok != scanner.EOF; tok = s.Scan() {
 			t := strings.ToLower(s.TokenText())
-			if !utf8.ValidString(t) || utf8.RuneCount([]byte(t)) <= 3 || (*seen)[t] {
+			if skiptok.MatchString(t) || !utf8.ValidString(t) || utf8.RuneCount([]byte(t)) <= 3 || (*seen)[t] {
 				continue
 			}
 			(*seen)[t] = true
@@ -173,7 +175,7 @@ func main() {
 	// Add command-line arguments to worklist.
 	n.Add(1)
 	go func() {
-		worklist <- []string{root + "/index.html"}
+		worklist <- []string{bootstrap}
 	}()
 
 	go func() {
@@ -188,6 +190,7 @@ func main() {
 		}
 	}()
 	go func() {
+		time.Sleep(500 * time.Millisecond)
 		n.Wait()
 		close(worklist)
 	}()

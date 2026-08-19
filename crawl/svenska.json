@@ -1,0 +1,9 @@
+{
+    "root": "/home/marc/public_html/l",
+    "bootstrap": "/home/marc/public_html/l/svenska.html",
+    "skipword": [
+	"marc",
+	"girod"
+    ],
+    "skippath": []
+}

@@ -1,6 +1,6 @@
-module search/crawl
+module sengine/crawl3
 
-go 1.21.5
+go 1.26.6
 
 require (
 	github.com/gookit/config/v2 v2.2.7
