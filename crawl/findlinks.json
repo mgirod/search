@@ -1,18 +1,1 @@
-{
-    "root": "/home/marc/public_html",
-    "bootstrap": "/home/marc/public_html/index.html",
-    "skipword": [
-	"marc",
-	"girod"
-    ],
-    "skippath": [
-	"/home/marc/public_html/cgi-bin/cchist",
-	"/home/marc/public_html/cgi-bin/cccat",
-	"/home/marc/public_html/cgi-bin/nav",
-	"/home/marc/public_html/cgi-bin/wg/lib/url_get.pl",
-	"/home/marc/public_html/cgi-bin/wbglimpse/lib/url_get.pl",
-	"/home/marc/public_html/cgi-bin/wglimpse/lib/url_get.pl",
-	"/home/marc/public_html/cgi-bin/itdiary",
-	"/home/marc/public_html/cgi-bin/ansidiary"
-    ]
-}
+search.json
