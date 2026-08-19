@@ -9,12 +9,12 @@ The output text file(s) is|are consumed by the cgi script installed from search/
 
 Setup in search/cgi/main.go:
 
-- `exename` is dynamically set to the name of the binary;
+- `exename` is dynamically set to the name of the binary;  
   this allows to alias it in order to support disjoint domains
 - sets of constants:  
   `pfx` is the url mapped to the root defined in findlinks.json for web pages  
   `fsroot` is the file system directory under which to find the corresponding html files  
-  `infile` is the name of the text database, local to the cgi 'script'
+  `infile` is the name of the text database, local to the cgi 'script'  
   `spagename` is a string used in the search page title
 
 Installation (as an example, remotely built for a raspberry pi named `berry`):
