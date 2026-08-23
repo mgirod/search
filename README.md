@@ -21,7 +21,7 @@ Installation (as an example, remotely built for a raspberry pi named `berry`):
 
     ~> cd ~/git/search/cgi
     cgi> GOOS=linux GOARCH=arm64 GOARM=7 go build -buildvcs=false .
-    cgi> scp search berry:/tmp/
+    cgi> scp cgi berry:/tmp/search
 
 On berry (second command optional, to alias the binary):
 

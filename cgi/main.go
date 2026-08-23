@@ -19,10 +19,10 @@ var (
 	reFlg = regexp.MustCompile(`^r=`)
 	dbFlg = regexp.MustCompile(`^d=`)
 	hpFlg = regexp.MustCompile(`^h=`)
-	icFlg = regexp.MustCompile(`^i=`)
+	csFlg = regexp.MustCompile(`^c=`)
 	wsRe  = `(\s|&nbsp;|</?[^>]+>)+`
 	dbg   = false
-	igncs = false
+	cssen = false
 )
 
 func dbgPrint(w http.ResponseWriter, s string) {
@@ -66,7 +66,7 @@ func title(w http.ResponseWriter, fn string, itm []string) string {
 		} else {
 			spat = j[0]
 		}
-		if igncs {
+		if !cssen {
 			spat = "(?i)" + spat
 		}
 		pat, err = regexp.Compile(spat)
@@ -131,8 +131,8 @@ func main() {
 					dbg = true
 				} else if hpFlg.MatchString(k) {
 					hlp = true
-				} else if icFlg.MatchString(k) {
-					igncs = true
+				} else if csFlg.MatchString(k) {
+					cssen = true
 				}
 			}
 			dbgPrint(w, fmt.Sprintf("arg: %v<br>\n", arg))
@@ -210,9 +210,9 @@ func main() {
 		fmt.Fprintf(w, "<br>regexp mode: ")
 		checked := map[bool]string{false: "", true: " CHECKED"}
 		fmt.Fprintf(w, `<input type="checkbox"%s name="r"`, checked[re])
-		fmt.Fprintf(w, "<br><br>ignore case: ")
-		ignorecase := map[bool]string{false: "", true: " CHECKED"}
-		fmt.Fprintf(w, `<input type="checkbox"%s name="i"`, ignorecase[igncs])
+		fmt.Fprintf(w, "<br><br>case sensitive: ")
+		casesensitive := map[bool]string{false: "", true: " CHECKED"}
+		fmt.Fprintf(w, `<input type="checkbox"%s name="c"`, casesensitive[cssen])
 		fmt.Fprintf(w, "<br><br>show help: ")
 		help := map[bool]string{false: "", true: " CHECKED"}
 		fmt.Fprintf(w, `<input type="checkbox"%s name="h"`, help[hlp])
