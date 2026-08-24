@@ -47,3 +47,13 @@ Then on berry:
 
     ~> sudo mv /tmp/search.out /usr/lib/cgi-bin/
     ~> sudo mv /tmp/svenska.out /usr/lib/cgi-bin/
+
+Bug/feature:
+
+- Building the index uses a parser, which skips matches within html tags
+  such as urls, comments, etc.  
+  However the search process within pages uses a regexp which will not
+  skip those tags. So, if a page contained both a valid match and one
+  within an html tag, the latter will get dug up.  
+  The result may be unexpected e.g. if the case of the matches differ:
+  one may report a match which the rendering hides.
