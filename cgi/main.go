@@ -20,7 +20,7 @@ var (
 	dbFlg = regexp.MustCompile(`^d=`)
 	hpFlg = regexp.MustCompile(`^h=`)
 	csFlg = regexp.MustCompile(`^c=`)
-	wsRe  = `(\s|&nbsp;|</?[^>]+>)+`
+	wsRe  = `(\s|&nbsp;|</?[^>]+>|-)+`
 	dbg   = false
 	cssen = false
 )
@@ -235,7 +235,7 @@ func main() {
 			fmt.Fprintf(w, "<br>Use '\\b(love|amour)\\b' to restrict to the exact words (bug with parentheses and cyrillic...)\n")
 			fmt.Fprintf(w, "<li><i>regexp mode</i>: '[eé]vidence' to accept both English and French spellings.\n")
 			fmt.Fprintf(w, "<br>'différ.nce\\b' to accept Derrida's variant.\n")
-			fmt.Fprintf(w, "<li>'Etat+reconnu' matches only the two words in sequence.\n")
+			fmt.Fprintf(w, "<li>'Etat+reconnu' matches only the two words in sequence, separated by white space and/or dashes.\n")
 			fmt.Fprintf(w, "<li>'Luc+Bronner' avoids matching 'Gérald Bronner', even if 'Luc' is too short to get indexed.\n")
 			fmt.Fprintf(w, "<li><i>regexp mode</i>: 'influencer+.*+robots' matches 'influencer les robots'.\n")
 			fmt.Fprintf(w, "</ul>\n")
