@@ -142,28 +142,25 @@ func main() {
 			if err != nil && err.Error() != "EOF" {
 				fmt.Fprintf(w, "error: %v<br>\n", err)
 			}
-			S := s
-			s = strings.ToLower(s)
 			if s != "" {
-				Items := strings.Split(S, " ")
 				items := []string{}
 				allitems := strings.Split(s, " ")
 				for _, i := range allitems {
 					for _, j := range strings.Split(i, "+") {
 						if prune(j) {
-							items = append(items, j)
+							items = append(items, (strings.Trim(j, " ")))
 						}
 					}
 				}
 				nit := len(items)
 				dbgPrint(w, fmt.Sprintf("items: %v, len: %v<br>\n", items, nit))
-				dbgPrint(w, fmt.Sprintf("Items: %v, len: %v<br>\n", Items, len(Items)))
 				hit := make(map[string]int)
 				//successfully match re only once per file
 				skipre := make(map[string]map[string]bool)
 				remap := make(map[string]*regexp.Regexp, nit)
 				if re {
 					for _, i := range items {
+						i = strings.ToLower(i)
 						remap[i] = regexp.MustCompile(i)
 					}
 				}
@@ -172,6 +169,7 @@ func main() {
 					l := strings.SplitN(db.Text(), " ", 2)
 					// fmt.Fprintf(w, "debug: %v<br>\n", l[0])
 					for _, i := range items {
+						i = strings.ToLower(i)
 						match := false
 						if re {
 							match = remap[i].MatchString(l[0])
@@ -189,7 +187,7 @@ func main() {
 							skipre[f][i] = true
 							hit[f] += 1
 							if hit[f] == nit {
-								t := title(w, l[1], Items)
+								t := title(w, l[1], items)
 								if t == "" {
 									break
 								}
