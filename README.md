@@ -31,7 +31,7 @@ On berry (second command optional, to alias the binary):
 Instructions:
 
     ~> cd ~/git/search/crawl/
-    ~> crawl> readlink findlinks.json 
+    crawl> readlink findlinks.json 
     search.json
     crawl> go run findlinks.go > /tmp/search.out
     crawl> scp /tmp/search.out berry:/tmp/
