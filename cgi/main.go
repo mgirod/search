@@ -20,7 +20,7 @@ var (
 	dbFlg = regexp.MustCompile(`^d=`)
 	hpFlg = regexp.MustCompile(`^h=`)
 	csFlg = regexp.MustCompile(`^c=`)
-	wsRe  = `(\s|&nbsp;|</?[^>]+>|-)+`
+	wsRe  = `(\s|&nbsp;|</?[^>]+>|[-'])+`
 	dbg   = false
 	cssen = false
 )
@@ -143,12 +143,14 @@ func main() {
 				fmt.Fprintf(w, "error: %v<br>\n", err)
 			}
 			if s != "" {
+				wpre := regexp.MustCompile(`\s*\+\s*`)
+				s = wpre.ReplaceAllString(s, "+")
 				items := []string{}
 				allitems := strings.Split(s, " ")
 				for _, i := range allitems {
 					for _, j := range strings.Split(i, "+") {
 						if prune(j) {
-							items = append(items, (strings.Trim(j, " ")))
+							items = append(items, j)
 						}
 					}
 				}
@@ -187,7 +189,7 @@ func main() {
 							skipre[f][i] = true
 							hit[f] += 1
 							if hit[f] == nit {
-								t := title(w, l[1], items)
+								t := title(w, l[1], allitems)
 								if t == "" {
 									break
 								}
